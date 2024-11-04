@@ -19,6 +19,6 @@ class PyBytecodeHandler(BaseHandler):
         question = TEMPLATE.format(function_name=function_name, disassembled_code=bytecode_in_a_string)
         # USAGE: Send a string with a full prompt with prompt engineering that includes the function name and the disassembled code
         # Expected output: python code
-        python_code = model.generate_local(question)
+        python_code = model.generate(question)
         print(python_code)
         return python_code

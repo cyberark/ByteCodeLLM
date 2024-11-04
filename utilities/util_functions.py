@@ -21,8 +21,12 @@ def increase_indent_by_one(data):
     return data
 
 def convert_indent_to_spaces(data):
+    is_bytes = isinstance(data[0],bytes)
     for i in range(len(data)):
-        data[i] = data[i].replace('\t','    ')
+        if not is_bytes:
+            data[i] = data[i].replace('\t','    ')
+        else:
+            data[i] = data[i].replace(b'\t',b'    ')
     return data
 
 def convert_spaces_to_indent(data):
