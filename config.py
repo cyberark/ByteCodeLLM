@@ -6,8 +6,8 @@ PYCDC_PATH = '/usr/local/bin/pycdc' # 'executables_hidden/pycdc'
 MODEL_TYPE = 'huggingface'
 # Huggingface model parameters
 HF_MODEL_SAVE_DIR = "cache"
-HF_REPO_ID = "mradermacher/Gemma-2-Ataraxy-v2-9B-GGUF"
-HF_FILENAME = "Gemma-2-Ataraxy-v2-9B.Q8_0.gguf"
+HF_REPO_ID = "bartowski/gemma-2-9b-it-GGUF"
+HF_FILENAME = "gemma-2-9b-it-Q4_K_M.gguf"
 HF_MODEL_PARAMS = {"top_p": 0.95, "temperature": 0.5}
 HF_MAX_LENGTH = 1024 * 6
 # Local model parameters
