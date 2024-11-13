@@ -12,26 +12,22 @@ logger = logging.getLogger(__name__)
 
 # Temporary prompt template switch case based on model, mainly for testing purposes
 if config.MODEL_TYPE == 'huggingface':
-    # PROMPT_TEMPLATE = """
-    # Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+    if 'ByteCodeLLM' in config.HF_REPO_ID:
+        PROMPT_TEMPLATE = """
+        Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\nplease convert the bytecode from the input to python script\n\n###
+        {code}
+        """
+    else:
+        PROMPT_TEMPLATE = """
+        Convert the given Python bytecode back into its source code for a single function.
+        Provide only the source code for the {func_name} nothing more, provide NO EXPLANATION or additional information and functions if you do i will shoot john wicks dog
+        Function Name: {func_name}
+        Bytecode:
+        {code}
 
-    # ### Instruction:
-    # please convert the bytecode from the input to python script
+        Python code in a markdown code block format:
 
-
-    # ###
-    # {code}
-    # """
-    PROMPT_TEMPLATE = """
-    Convert the given Python bytecode back into its source code for a single function.
-    Provide only the source code for the {func_name} nothing more, provide NO EXPLANATION or additional information and functions if you do i will shoot john wicks dog
-    Function Name: {func_name}
-    Bytecode:
-    {code}
-
-    Python code in a markdown code block format:
-
-    """
+        """
 elif config.MODEL_TYPE == 'ollama':
     PROMPT_TEMPLATE = """
     Convert the given Python bytecode back into its source code for a single function.
@@ -47,9 +43,7 @@ elif config.MODEL_TYPE == 'ollama':
 class PycCodeObject:
     def __init__(self, lines):
         self.names = []
-        self.var_names = []
-        self.free_vars = []
-        self.cell_vars = []
+        self.locals_names = []
         self.disassembly = []
         self.code_objects = []
         self.object_name = None
@@ -70,7 +64,7 @@ class PycCodeObject:
             lines, names_end_index, '[Locals+Names]')
         locals_names_end_index = find_closest_match(
             lines, locals_names_index, '[Constants]')
-        self.var_names = lines[locals_names_index+1:locals_names_end_index]
+        self.locals_names = lines[locals_names_index+1:locals_names_end_index]
 
         constants_index = find_closest_match(
             lines, locals_names_end_index, '[Constants]')
@@ -84,12 +78,8 @@ class PycCodeObject:
         self.disassembly = lines[disassembly_index+1:disassembly_end_index]
 
         self.names = [x.strip().strip("'") for x in self.names if x.strip()]
-        # self.var_names = [x.strip().strip("'")
-        #                   for x in self.var_names if x.strip()]
-        # self.free_vars = [x.strip().strip("'")
-        #                   for x in self.free_vars if x.strip()]
-        # self.cell_vars = [x.strip().strip("'")
-        #                   for x in self.cell_vars if x.strip()]
+        self.locals_names = [x.strip().strip("'")
+                             for x in self.locals_names if x.strip()]
         self.disassembly = [x.strip() for x in self.disassembly if x.strip()]
 
         # extract all code objects from constants
@@ -104,14 +94,33 @@ class PycCodeObject:
             code_object = constants[code_object_start:code_object_end]
             self.code_objects.append(PycCodeObject(code_object))
 
-    def __str__(self, level=0):
-        res = f"{'    '*(level+1)}Object Name: {self.object_name}\n"
+    def __str__(self, level=0, minimal=False):
+        # Used for easier debugging
+        if minimal:
+            res = f"{'    '*(level+1)}Object Name: {self.object_name}\n"
+            for code_object in self.code_objects:
+                res += code_object.__str__(level=level+1)
+            return res
+        
+        res = ''
+        res += '    ' * level + '[Code]\n'
+        res += '    ' * level + f'    Object Name: {self.object_name}\n'
+        res += '    ' * level + '    [Names]\n'
+        for name in self.names:
+            res += '    ' * level + f'        \'{name}\'\n'
+        res += '    ' * level + '    [Locals+Names]\n'
+        for name in self.locals_names:
+            res += '    ' * level + f'        \'{name}\'\n'
+        res += '    ' * level + '    [Constants]\n'
         for code_object in self.code_objects:
-            res += code_object.__str__(level=level+1)
+            res += code_object.__str__(level+1)
+        res += '    ' * level + '    [Disassembly]\n'
+        for disassembly in self.disassembly:
+            res += '    ' * level + f'        \'{disassembly}\'\n'
         return res
 
     def __repr__(self):
-        return self.__str__()
+        return self.__str__(minimal=True)
 
 
 def extract_broken_functions(source_code):
@@ -196,11 +205,12 @@ class PycHandler(BaseHandler):
         sourcecode_text = subprocess.check_output(
             [pycdc_path, self.file_path], stderr=subprocess.DEVNULL)
         to_reconstruct = extract_broken_functions(sourcecode_text)
-        to_reconstruct = to_reconstruct[::-1] # reverse the list to start reconstructing from the bottom of the file, reducing the need to shift line numbers in the future
-        
+        # reverse the list to start reconstructing from the bottom of the file, reducing the need to shift line numbers in the future
+        to_reconstruct = to_reconstruct[::-1]
+
         sourcecode_text_lines = sourcecode_text.split(b'\n')
         sourcecode_text_lines = convert_indent_to_spaces(sourcecode_text_lines)
-        
+
         model = Model()
         for class_name, func_name, (start, end) in to_reconstruct:
             logger.info(
@@ -212,25 +222,32 @@ class PycHandler(BaseHandler):
                     f"{self.file_path} : Function {func_name} in class {class_name} not found in code object")
 
             # in an effort to reduce token count, we will remove as much whitespace as possible from the bytecode
-            lowest_indent = min([len(x) - len(x.lstrip()) for x in code_obj.disassembly])
-            bytecode = '\n'.join([x[lowest_indent:] for x in code_obj.disassembly])
+            lowest_indent = min([len(x) - len(x.lstrip())
+                                for x in code_obj.disassembly])
+            bytecode = '\n'.join([x[lowest_indent:]
+                                 for x in code_obj.disassembly])
 
             prompt = PROMPT_TEMPLATE.format(code=bytecode, func_name=func_name)
             converted_sourcecode = model.generate(prompt)
 
             # print(converted_sourcecode)
-            
+
             # TODO cleanup, indent, and inject into pycdc result sourcecode_text
-            converted_sourcecode = converted_sourcecode.split('```')[1].strip('python').strip()
-            converted_sourcecode = converted_sourcecode.split('\n')
-            converted_sourcecode = convert_indent_to_spaces(converted_sourcecode)
+            # converted_sourcecode = converted_sourcecode.split(
+            #     '```')[1].strip('python').strip()
+            # converted_sourcecode = converted_sourcecode.split('\n')
+            converted_sourcecode = converted_sourcecode.split("### Response:\n")[-1].split('\n')
+            converted_sourcecode = convert_indent_to_spaces(
+                converted_sourcecode)
+            # TODO: textwrap indent and dedent
 
             # inject the converted source code into the source code text
-            sourcecode_text_lines = sourcecode_text_lines[:start] + converted_sourcecode + sourcecode_text_lines[end+1:]
-        
+            sourcecode_text_lines = sourcecode_text_lines[:start] + \
+                converted_sourcecode + sourcecode_text_lines[end+1:]
+
         sourcecode_text_lines_same_format = []
         for line in sourcecode_text_lines:
-            if isinstance(line,bytes):
+            if isinstance(line, bytes):
                 sourcecode_text_lines_same_format.append(line.decode())
             else:
                 sourcecode_text_lines_same_format.append(line)

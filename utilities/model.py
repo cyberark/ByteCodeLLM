@@ -29,8 +29,7 @@ class Model:
                         repo_id=config.HF_REPO_ID,
                         filename=config.HF_FILENAME,
                         cache_dir=save_dir,
-                        local_dir=save_dir,
-                        token="***REMOVED***"
+                        local_dir=save_dir
                     )
                 except Exception as e:
                     logger.error(f"Error downloading model: {e}")
