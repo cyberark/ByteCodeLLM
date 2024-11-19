@@ -4,8 +4,31 @@ import json
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 import os
-import config
 import logging
+
+import sys
+import importlib.util
+
+def load_config():
+    # Determine the directory of the running executable or script
+    if getattr(sys, 'frozen', False):  # Check if running in a PyInstaller bundle
+        base_path = sys._MEIPASS  # Temporary folder where PyInstaller extracts files
+        # Look for `config.py` in the same directory as the executable
+        config_path = os.path.join(os.path.dirname(sys.executable), 'config.py')
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        # Look for `config.py` relative to the source structure
+        config_path = os.path.join(base_path, '..', 'config.py')
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Configuration file not found at {config_path}")
+
+    spec = importlib.util.spec_from_file_location("config", config_path)
+    config = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(config)
+    return config
+
+config = load_config()
 
 logger = logging.getLogger(__name__)
 

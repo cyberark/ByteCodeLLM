@@ -1,6 +1,6 @@
 # Utility executables
-PYCDAS_PATH = '/usr/local/bin/pycdas' # 'executables_hidden/pycdas'
-PYCDC_PATH = '/usr/local/bin/pycdc' # 'executables_hidden/pycdc'
+PYCDAS_PATH = '/home/ubuntu/pycdc/pycdas' # 'executables_hidden/pycdas'
+PYCDC_PATH = '/home/ubuntu/pycdc/pycdc' # 'executables_hidden/pycdc'
 
 # Types include 'huggingface', 'local', 'ollama'
 MODEL_TYPE = 'huggingface'
