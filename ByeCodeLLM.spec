@@ -16,7 +16,7 @@ a = Analysis(
         'nvidia-cudnn-cu12', 'nvidia-cufft-cu12', 'nvidia-curand-cu12', 'nvidia-cusolver-cu12',
         'nvidia-cusparse-cu12', 'nvidia-nccl-cu12', 'nvidia-nvjitlink-cu12', 'nvidia-nvtx-cu12',
         'nvidia-cuda-cupti-cu12', 'bitsandbytes', 'xformers', 'triton'
-    ]
+    ],
     noarchive=False,
     optimize=0,
 )
