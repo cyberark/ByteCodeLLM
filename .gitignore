@@ -58,3 +58,5 @@ __pycache__
 *.gguf
 *.exe
 /model_test/*
+.vscode/launch.json
+output

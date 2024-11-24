@@ -23,20 +23,27 @@ Currently supported languages:
 ## Installation
 To install the project start by compiling the pycdc project, to do so please follow the compilation instructions on [https://github.com/zrax/pycdc](https://github.com/zrax/pycdc)
 
-After compiling the project you should have both `pycdc` and `pycdas` executables ready, store those paths to the side as it will be needed for the configuration
+After compiling the project you should have both 'pycdc' and 'pycdas' executables ready, store those paths to the side as it will be needed for the configuration
 
 Then we can setup the project by cloning the repository
-```
+'''
 git clone https://github.com/cyberark/ByteCodeLLM
-```
+'''
 
-Change the configuration inside the file `config.py` to suit your needs, see [Configuration](#configuration) for more in depth information.
+Change the configuration inside the file 'config.py' to suit your needs, see [Configuration](#configuration) for more in depth information.
 
-Make sure to point the `PYCDAS_PATH` and `PYCDC_PATH` variables to where you have them stored
+Make sure to point the 'PYCDAS_PATH' and 'PYCDC_PATH' variables to where you have them stored
+
+intall the 'requirements.txt' file with:
+'''
+pip install requirements.txt
+'''
+
 ## Usage
-After configuration, you can run the project by running the main file `ByteCodeLLM.py`
+After configuration, you can run the project by running the main file 'ByteCodeLLM.py'
 
-```
+
+'''
 python ByeCodeLLM.py [-h] [--path PATH] [--output OUTPUT] [--type {exe,pyc,folder,py_bytecode}] [--llm LLM] [--llm-args LLM_ARGS]
 
 ByeCodeLLM
@@ -47,50 +54,50 @@ options:
   --output OUTPUT       Output path
   --type {exe,pyc,folder,py_bytecode}
                         Type of the input
-  --llm LLM             Name or path to the LLM file by default goes to one of the pretrained LLM's included
+  --llm LLM             Name or patrequirements.txth to the LLM file by default goes to one of the pretrained LLM's included
   --llm-args LLM_ARGS   Arguments to pass to the LLM
-```
+'''
 
-If you know the input file type specify it using the `--type` argument, currently supported types:
+If you know the input file type specify it using the '--type' argument, currently supported types:
 * PYC
 * Folder of PYC files (TBA)
 * EXE (TBA)
 
-And you can change the output folder / file through the `--output` argument
+And you can change the output folder / file through the '--output' argument
 
 
 
 ## Features
 ### Python 3
-This tool currently supports `.pyc` files (compiled Python), with future plans to extend support to a full pipeline from `.exe` to `.py`.
+This tool currently supports '.pyc' files (compiled Python), with future plans to extend support to a full pipeline from '.exe' to '.py'.
 
-For handling `.pyc` files, we utilize `pycdc`, an open-source tool designed to extract bytecode and attempt source code reconstruction. Unlike Python’s built-in `dis` module, `pycdc` works across all Python versions without depending on a specific version installed on your machine.
+For handling '.pyc' files, we utilize 'pycdc', an open-source tool designed to extract bytecode and attempt source code reconstruction. Unlike Python’s built-in 'dis' module, 'pycdc' works across all Python versions without depending on a specific version installed on your machine.
 
 #### Process Overview
 
-1. **Decompilation**: We start by decompiling the `.pyc` file using `pycdc` for an incomplete source code and `pycdas` for a complete bytecode.
-2. **Identifying Incomplete Functions**: Any functions that weren’t fully decompiled are marked with the comment `# WARNING: Decompyle incomplete`.
+1. **Decompilation**: We start by decompiling the '.pyc' file using 'pycdc' for an incomplete source code and 'pycdas' for a complete bytecode.
+2. **Identifying Incomplete Functions**: Any functions that weren’t fully decompiled are marked with the comment '# WARNING: Decompyle incomplete'.
 3. **Bytecode Recovery**: For these incomplete functions, we retrieve the corresponding bytecode.
 4. **LLM-Based Source Conversion**: Using a finetuned language model (LLM) hosted locally on your machine translates the bytecode back into source code.
-5. **Integration**: The generated source code is then injected into the initial output from `pycdc`, creating a more complete final code.
+5. **Integration**: The generated source code is then injected into the initial output from 'pycdc', creating a more complete final code.
 
-This approach combines the strengths of `pycdc` and `pycdas` parsing capabilities and version-independent approach with advanced LLMs to enhance decompilation quality and make up for the gap between the newest versiosn of python and the lack of capability in `pycdc` to support them.
+This approach combines the strengths of 'pycdc' and 'pycdas' parsing capabilities and version-independent approach with advanced LLMs to enhance decompilation quality and make up for the gap between the newest versiosn of python and the lack of capability in 'pycdc' to support them.
 
 
 
 ## Configuration
-In the `config.py` file you will see pre filled configurations for utilizing LLM modules in one of 3 ways - 
+In the 'config.py' file you will see pre filled configurations for utilizing LLM modules in one of 3 ways - 
 1. HuggingFace - for running models stored on huggingface
 2. Local - for running models you might have downloaded or trained yourself
 3. Ollama - for running LLM models through the flexible Ollama application, allowing both local and remote execution
 
 Additionally, this file contains the paths to utility files like pycdc, point those paths to the corresponding files:
-```python
+'''python
 # Utility executables
 PYCDC_PATH = '/usr/local/bin/pycdc' #  Path to PYCDC file
 PYCDAS_PATH = '/usr/local/bin/pycdas' # Path to PYCDAS file
 
-```
+'''
 
 ## Contributing
 Currently we are not seeking for active contribution and maintainers, please use the issues feature to open feature requests and bug reports
