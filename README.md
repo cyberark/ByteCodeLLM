@@ -58,7 +58,12 @@ If you know the input file type specify it using the `--type` argument, currentl
 
 And you can change the output folder / file through the `--output` argument
 
+## Compiled Versions
+Pre-compiled versions of ByteCodeLLM are available on the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page. 
+Download the latest release for your platform and follow the instructions provided there.
 
+## Compiling From Source
+To compile ByteCodeLLM yourself, refer to the instructions on the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page.
 
 ## Features
 ### Python 3
