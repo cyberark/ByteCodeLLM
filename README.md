@@ -21,23 +21,29 @@ Currently supported languages:
 ---
 
 ## Installation
-To install the project start by compiling the pycdc project, to do so please follow the compilation instructions on [https://github.com/zrax/pycdc](https://github.com/zrax/pycdc)
+### Prerequisite: Compile pycdc and pycdas
+Follow the instructions [here](https://github.com/zrax/pycdc) to compile the `pycdc` and `pycdas` executables.
 
-After compiling the project you should have both `pycdc` and `pycdas` executables ready, store those paths to the side as it will be needed for the configuration
+Once compiled, note their paths for later configuration (e.g., `/usr/local/bin/pycdc`).
 
-Then we can setup the project by cloning the repository
+**Then we can setup the project by cloning the repository:**
 ```
 git clone https://github.com/cyberark/ByteCodeLLM
 ```
 
 Change the configuration inside the file `config.py` to suit your needs, see [Configuration](#configuration) for more in depth information.
 
-Make sure to point the `PYCDAS_PATH` and `PYCDC_PATH` variables to where you have them stored
+**Make sure to point the `PYCDAS_PATH` and `PYCDC_PATH` variables to where you have them stored.**
 ## Usage
 After configuration, you can run the project by running the main file `ByteCodeLLM.py`
 
 ```
 python ByeCodeLLM.py [-h] [--path PATH] [--output OUTPUT] [--type {exe,pyc,folder,py_bytecode}] [--llm LLM] [--llm-args LLM_ARGS]
+
+USAGE EXAMPLE:
+python ByteCodeLLM.py --path ./examples/test.pyc --type pyc --output ./output
+
+# This command decompiles test.pyc to Python source and saves the output in the ./output folder
 
 ByeCodeLLM
 
@@ -59,11 +65,12 @@ If you know the input file type specify it using the `--type` argument, currentl
 And you can change the output folder / file through the `--output` argument
 
 ## Compiled Versions
-Pre-compiled versions of ByteCodeLLM are available on the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page. 
-Download the latest release for your platform and follow the instructions provided there.
+Pre-compiled versions (ELF/EXE) of ByteCodeLLM are available for convenience. 
+You can download the latest release directly from the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page.
 
 ## Compiling From Source
-To compile ByteCodeLLM yourself, refer to the instructions on the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page.
+If you prefer to compile ByteCodeLLM from the source code, follow these steps:
+Refer to the instructions on the [GitHub Releases](https://github.com/cyberark/ByteCodeLLM/releases) page.
 
 ## Features
 ### Python 3
