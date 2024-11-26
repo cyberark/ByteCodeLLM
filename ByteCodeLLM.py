@@ -8,6 +8,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+BASE_DIRECTORY = os.path.abspath(os.getcwd())
+
+def is_safe_path(base_path, user_path):
+    # Resolve absolute paths
+    absolute_base = os.path.abspath(base_path)
+    absolute_user = os.path.abspath(user_path)
+    # Ensure the user path is within the base path
+    return os.path.commonpath([absolute_base, absolute_user]) == absolute_base
 
 def main():
     start = time.time()
@@ -30,16 +38,27 @@ def main():
         '--llm-args', help='Arguments to pass to the LLM', default="")
 
     args = parser.parse_args()
-
+    
     if args.llm not in llm_options:
         print('Invalid LLM option')
         sys.exit(1)
 
+    if not os.path.exists(args.path):
+       raise ValueError(f"Error: The provided path '{args.path}' does not exist.")
+    
     if args.type == 'pyc':
+    # Ensure the input path is valid
+        if not os.path.exists(args.path) or not is_safe_path(BASE_DIRECTORY, args.path):
+            raise ValueError(f"Error: Invalid or unsafe path '{args.path}'")
+
         res = PycHandler(args.path).handle()
-    with open(args.output, 'w') as f:
-        f.write(res)
-    # print(res)
+
+        # Ensure the output path is safe
+        if not is_safe_path(BASE_DIRECTORY, args.output):
+            raise ValueError(f"Error: Unsafe output path '{args.output}'")
+
+        with open(args.output, 'w') as f:
+            f.write(res)
 
     time_in_seconds = time.time() - start
     import datetime
