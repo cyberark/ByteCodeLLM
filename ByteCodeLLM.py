@@ -51,6 +51,13 @@ def main():
 
     args = parser.parse_args()
 
+    if args.llm not in llm_options:
+        print('Invalid LLM option')
+        sys.exit(1)
+
+    if not os.path.exists(args.path):
+       raise ValueError(f"Error: The provided path '{args.path}' does not exist.")
+    
     # Validate and check the safety of the path
     try:
         validate_path(args.path)
@@ -59,13 +66,6 @@ def main():
     except ValueError as e:
         logger.error(e)
         sys.exit(1)
-    
-    if args.llm not in llm_options:
-        print('Invalid LLM option')
-        sys.exit(1)
-
-    if not os.path.exists(args.path):
-       raise ValueError(f"Error: The provided path '{args.path}' does not exist.")
     
     if args.type == 'pyc':
 
