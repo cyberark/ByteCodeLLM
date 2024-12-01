@@ -59,4 +59,3 @@ __pycache__
 *.exe
 /model_test/*
 ByteCodeLLM.spec
-eula.py
