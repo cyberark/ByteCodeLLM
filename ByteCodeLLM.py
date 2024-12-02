@@ -4,10 +4,30 @@ import sys
 from file_extractors import PycHandler
 import time
 import logging
+import re
+
 # setup logging to print to console
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+BASE_DIRECTORY = os.path.abspath(os.getcwd())
+
+def validate_path(path):
+    # Example: Allow only alphanumeric characters, underscores, hyphens, and slashes
+    if re.match(r'^[\w\-/\\.]+$', path): 
+        return path
+    else:
+        raise ValueError("Invalid path")
+
+
+def is_safe_path(base_dir, path, follow_symlinks=True):
+    # Resolve the absolute path
+    if follow_symlinks:
+        resolved_path = os.path.realpath(path)
+    else:
+        resolved_path = os.path.abspath(path)
+    # Check if the resolved path starts with the base directory
+    return resolved_path.startswith(os.path.realpath(base_dir))
 
 def main():
     start = time.time()
@@ -35,11 +55,24 @@ def main():
         print('Invalid LLM option')
         sys.exit(1)
 
+    if not os.path.exists(args.path):
+       raise ValueError(f"Error: The provided path '{args.path}' does not exist.")
+    
+    # Validate and check the safety of the path
+    try:
+        validate_path(args.path)
+        if not is_safe_path(BASE_DIRECTORY, args.path):
+            raise ValueError(f"Error: Unsafe path '{args.path}'. It is outside the allowed base directory.")
+    except ValueError as e:
+        logger.error(e)
+        sys.exit(1)
+    
     if args.type == 'pyc':
+
         res = PycHandler(args.path).handle()
-    with open(args.output, 'w') as f:
-        f.write(res)
-    # print(res)
+
+        with open(args.output, 'w') as f:
+            f.write(res)
 
     time_in_seconds = time.time() - start
     import datetime
