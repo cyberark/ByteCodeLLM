@@ -1,3 +1,5 @@
+![ByteCodeLLMBackgroung](https://github.com/cyberark/ByteCodeLLM/blob/main/option1.png)
+
 # ByteCodeLLM
 
 ![License](https://img.shields.io/github/license/cyberark/ByteCodeLLM) ![Issues](https://img.shields.io/github/issues/cyberark/ByteCodeLLM) ![Stars](https://img.shields.io/github/stars/cyberark/ByteCodeLLM)
@@ -45,7 +47,7 @@ python ByteCodeLLM.py --path ./examples/test.pyc --type pyc --output ./output
 
 # This command decompiles test.pyc to Python source and saves the output in the ./output folder
 
-ByeCodeLLM
+ByteCodeLLM
 
 options:
   -h, --help            show this help message and exit
@@ -53,7 +55,7 @@ options:
   --output OUTPUT       Output path
   --type {exe,pyc,folder,py_bytecode}
                         Type of the input
-  --llm LLM             Name or path to the LLM file by default goes to one of the pretrained LLM's included
+  --llm LLM             Name or path to the LLM file by default goes to one of the pretrained LLM's included  - default will download Gemma 2 9B 
   --llm-args LLM_ARGS   Arguments to pass to the LLM
 ```
 
@@ -86,12 +88,12 @@ For handling `.pyc` files, we utilize `pycdc`, an open-source tool designed to e
 4. **LLM-Based Source Conversion**: Using a finetuned language model (LLM) hosted locally on your machine translates the bytecode back into source code.
 5. **Integration**: The generated source code is then injected into the initial output from `pycdc`, creating a more complete final code.
 
-This approach combines the strengths of `pycdc` and `pycdas` parsing capabilities and version-independent approach with advanced LLMs to enhance decompilation quality and make up for the gap between the newest versiosn of python and the lack of capability in `pycdc` to support them.
+This approach combines the strengths of `pycdc` and `pycdas` parsing capabilities and version-independent approach with advanced LLMs to enhance decompilation quality and make up for the gap between the newest versions of python and the lack of capability in `pycdc` to support them.
 
 
 
 ## Configuration
-In the `config.py` file you will see pre filled configurations for utilizing LLM modules in one of 3 ways - 
+In the `config.py` file you will see pre filled configurations for utilizing LLM modules in one of three ways - 
 1. HuggingFace - for running models stored on huggingface
 2. Local - for running models you might have downloaded or trained yourself
 3. Ollama - for running LLM models through the flexible Ollama application, allowing both local and remote execution
@@ -108,26 +110,16 @@ PYCDAS_PATH = '/usr/local/bin/pycdas' # Path to PYCDAS file
 Currently we are not seeking for active contribution and maintainers, please use the issues feature to open feature requests and bug reports
 
 ## License
-ByteCodeLLM is licensed under the TBD license, read more about it in the LICENSE file
+ByteCodeLLM is licensed under the GNU General Public License v3.0, read more about it in the LICENSE file
 
-A list of all assets used in the project and their respective license
-External tools:
-* pyinstxtractor - [GNU 3.0](https://github.com/extremecoders-re/pyinstxtractor/blob/master/LICENSE)
-* pycdc - [GPL 3.0](https://github.com/zrax/pycdc/blob/master/LICENSE)
-
-External Python libraries:
-* llama_cpp - [MIT](https://github.com/ggerganov/llama.cpp/blob/master/LICENSE)
-* huggingface_hub - [Apache 2.0](https://github.com/huggingface/huggingface_hub/blob/main/LICENSE)
-* requests - [Apache 2.0](https://github.com/psf/requests/blob/main/LICENSE)
+## Third Parties
+A list of all third-party libraries and assets used in the project and their respective licenses can be found in the NOTICES file.
 
 Suggested LLM models:
-* bartowski/gemma-2-9b-it-GGUF - [Gemma](https://ai.google.dev/gemma/terms)
-* ByteCodeLLM - TBD
+* bartowski/gemma-2-9b-it-GGUF ((https://huggingface.co/bartowski/gemma-2-9b-it-GGUF) - this is the LLM model suggested by default . Please note that this is not an integral part of ByteCodeLLM’s code and can be replaced with other models. 
 
-Used datasets to train:
-* TDB
-
-Used examples for PYC come from empyrean under the license of [MIT](https://github.com/addi00000/empyrean/blob/main/LICENSE.md)
+##External Tools and Libraries
+Pyinstxtractor (https://github.com/extremecoders-re/pyinstxtractor) - a recommended component for extracting PYC. This component is not included in ByteCodeLLM’s code. 
 
 ## Contact
 Feel free to contact us via github issues if there are any feature requests or issues in the project
