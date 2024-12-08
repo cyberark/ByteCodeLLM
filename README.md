@@ -1,4 +1,4 @@
-![ByteCodeLLMBackgroung](https://github.com/cyberark/ByteCodeLLM/blob/main/option1.png)
+![ByteCodeLLMBackgroung](https://github.com/cyberark/ByteCodeLLM/blob/main/Pic_ByteCodeLLM.png)
 
 # ByteCodeLLM
 
