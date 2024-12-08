@@ -118,7 +118,7 @@ A list of all third-party libraries and assets used in the project and their res
 Suggested LLM models:
 * bartowski/gemma-2-9b-it-GGUF ((https://huggingface.co/bartowski/gemma-2-9b-it-GGUF) - this is the LLM model suggested by default . Please note that this is not an integral part of ByteCodeLLM’s code and can be replaced with other models. 
 
-##External Tools and Libraries
+## External Tools and Libraries <br />
 Pyinstxtractor (https://github.com/extremecoders-re/pyinstxtractor) - a recommended component for extracting PYC. This component is not included in ByteCodeLLM’s code. 
 
 ## Contact
