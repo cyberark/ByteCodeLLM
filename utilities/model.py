@@ -64,7 +64,7 @@ class Model:
             "options": config.OLLAMA_PARAMS
         }
         response = requests.post(
-            f'http://{config.OLLAMA_HOST}:{config.OLLAMA_PORT}/{config.OLLAMA_API.strip('/')}', json=data)
+            f'http://{config.OLLAMA_HOST}:{config.OLLAMA_PORT}/{config.OLLAMA_API.strip("/")}', json=data)
 
         # load jsonlines from response
         all_responses = [json.loads(x)['response']

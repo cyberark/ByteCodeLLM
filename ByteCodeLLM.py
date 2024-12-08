@@ -38,7 +38,7 @@ def main():
         # TODO: check this works down the line, this is only a placeholder
 
     parser = argparse.ArgumentParser(description='ByeCodeLLM')
-    parser.add_argument('--path', type=str, required =True
+    parser.add_argument('--path', type=str, required = True,
                         help='Path to the file or directory to convert')
     parser.add_argument('--output', type=str,
                         help='Output path', default='output')
