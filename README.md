@@ -124,4 +124,4 @@ Pyinstxtractor (https://github.com/extremecoders-re/pyinstxtractor) - a recommen
 ## Contact
 Feel free to contact us via github issues if there are any feature requests or issues in the project
 And contact us through linkedin:<br />
-[David El](linkedin.com/in/david-el/) and [Amir Landau](linkedin.com/in/amirlandau)
+[David El](https://linkedin.com/in/david-el/) and [Amir Landau](https://linkedin.com/in/amirlandau)
