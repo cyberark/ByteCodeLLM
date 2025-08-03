@@ -40,7 +40,7 @@ Change the configuration inside the file `config.py` to suit your needs, see [Co
 After configuration, you can run the project by running the main file `ByteCodeLLM.py`
 
 ```
-python ByeCodeLLM.py [-h] [--path PATH] [--output OUTPUT] [--type {exe,pyc,folder,py_bytecode}] [--llm LLM] [--llm-args LLM_ARGS]
+python ByteCodeLLM.py [-h] [--path PATH] [--output OUTPUT] [--type {exe,pyc,folder,py_bytecode}] [--llm LLM] [--llm-args LLM_ARGS]
 
 USAGE EXAMPLE:
 python ByteCodeLLM.py --path ./examples/test.pyc --type pyc --output ./output
